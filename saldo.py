@@ -10,5 +10,3 @@ for idx_1 in history:
     for idx in idx_1:
         file.write(str(idx) + "\n")
 file.write("stop" + '\n')
-
-

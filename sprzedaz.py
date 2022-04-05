@@ -15,4 +15,3 @@ for idx in history:
     action = idx[0]
     counter += 1
     print(f"Akcja {counter}: {idx}")
-
