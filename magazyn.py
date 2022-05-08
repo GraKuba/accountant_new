@@ -1,7 +1,7 @@
-from accountant import *
-downloading_history_form_file()
-adding_to_history_from_terminal()
+from decorators import *
 working_on_the_data()
+
+warehouse = working_on_the_data()[1]
 
 for position in warehouse:
     print(f"Name: {position} | Amount: {warehouse[position]}")

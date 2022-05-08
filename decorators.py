@@ -1,9 +1,61 @@
 import sys
 
 
-def downloading_history_form_file():
+class Manager:
+    def __init__(self):
+        self.actions = {}
+
+    def assign(self, name):
+        def decorate(cb):
+            self.actions[name] = cb
+
+        return decorate
+
+    def execute(self, name):
+        if name not in self.actions:
+            print("Action not defined")
+        else:
+            print(self.actions)
+            self.actions[name](self)
+
+
+manager = Manager()
+
+
+@manager.assign(sys.argv[0])
+def adding_to_history_from_terminal(manager):
+    history = downloading_history_form_file(sys.argv[1])
+    action = sys.argv[0]
+    if len(sys.argv) > 2:
+        if action == "saldo.py":
+            balance_change = int(sys.argv[2])
+            comment = sys.argv[3]
+            new_tuple = "saldo", balance_change, comment
+            history.append(new_tuple)
+        elif action == "zakup.py" or action == "sprzedaz.py":
+            product_name = sys.argv[2]
+            product_price = int(sys.argv[3])
+            product_amount = int(sys.argv[4])
+            if action == "zakup.py":
+                action = "zakup"
+            if action == "sprzedaz.py":
+                action = "sprzedaz"
+            new_tuple = action, product_name, product_price, product_amount
+            history.append(new_tuple)
+
+    file_path = sys.argv[1]
+    file = open(file_path, 'w')
+    for idx_1 in history:
+        for idx in idx_1:
+            file.write(str(idx) + "\n")
+    file.write("stop" + '\n')
+
+
+# manager.execute(action)
+
+
+def downloading_history_form_file(file_path):
     history = []
-    file_path = "in.txt"
     file = open(file_path, 'r')
 
     while True:
@@ -32,35 +84,8 @@ def downloading_history_form_file():
     return history
 
 
-def adding_to_history_from_terminal():
-    history = downloading_history_form_file()
-    action = sys.argv[0]
-    if len(sys.argv) > 2:
-        if action == "saldo.py":
-            balance_change = int(sys.argv[1])
-            comment = sys.argv[2]
-            new_tuple = "saldo", balance_change, comment
-            history.append(new_tuple)
-        elif action == "zakup.py" or action == "sprzedaz.py":
-            product_name = sys.argv[1]
-            product_price = int(sys.argv[2])
-            product_amount = int(sys.argv[3])
-            if action == "zakup.py":
-                action = "zakup"
-            if action == "sprzedaz.py":
-                action = "sprzedaz"
-            new_tuple = action, product_name, product_price, product_amount
-            history.append(new_tuple)
-        elif action == "przeglad.py":
-            number_of_commands = len(sys.argv)
-            command_number = sys.argv[1:number_of_commands]
-            for number in command_number:
-                print(history[int(number)])
-    return history
-
-
 def working_on_the_data():
-    history = adding_to_history_from_terminal()
+    history = downloading_history_form_file(sys.argv[1])
     command = []
     balance = 0
     warehouse = {}
