@@ -51,9 +51,6 @@ def adding_to_history_from_terminal(manager):
     file.write("stop" + '\n')
 
 
-# manager.execute(action)
-
-
 def downloading_history_form_file(file_path):
     history = []
     file = open(file_path, 'r')
