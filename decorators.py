@@ -22,27 +22,39 @@ class Manager:
 manager = Manager()
 
 
-@manager.assign(sys.argv[0])
-def adding_to_history_from_terminal(manager):
+@manager.assign('saldo.py')
+def recording_balance_from_terminal(manager):
     history = downloading_history_form_file(sys.argv[1])
-    action = sys.argv[0]
-    if len(sys.argv) > 2:
-        if action == "saldo.py":
-            balance_change = int(sys.argv[2])
-            comment = sys.argv[3]
-            new_tuple = "saldo", balance_change, comment
-            history.append(new_tuple)
-        elif action == "zakup.py" or action == "sprzedaz.py":
-            product_name = sys.argv[2]
-            product_price = int(sys.argv[3])
-            product_amount = int(sys.argv[4])
-            if action == "zakup.py":
-                action = "zakup"
-            if action == "sprzedaz.py":
-                action = "sprzedaz"
-            new_tuple = action, product_name, product_price, product_amount
-            history.append(new_tuple)
+    balance_change = int(sys.argv[2])
+    comment = sys.argv[3]
+    new_tuple = "saldo", balance_change, comment
+    history.append(new_tuple)
+    rewrite_with_updated_history(history)
 
+
+@manager.assign('zakup.py')
+def recording_purchase_from_terminal(manager):
+    history = downloading_history_form_file(sys.argv[1])
+    product_name = sys.argv[2]
+    product_price = int(sys.argv[3])
+    product_amount = int(sys.argv[4])
+    new_tuple = 'zakup', product_name, product_price, product_amount
+    history.append(new_tuple)
+    rewrite_with_updated_history(history)
+
+
+@manager.assign('sprzedaz.py')
+def recording_sale_from_terminal(manager):
+    history = downloading_history_form_file(sys.argv[1])
+    product_name = sys.argv[2]
+    product_price = int(sys.argv[3])
+    product_amount = int(sys.argv[4])
+    new_tuple = 'sprzedaz', product_name, product_price, product_amount
+    history.append(new_tuple)
+    rewrite_with_updated_history(history)
+
+
+def rewrite_with_updated_history(history):
     file_path = sys.argv[1]
     file = open(file_path, 'w')
     for idx_1 in history:
